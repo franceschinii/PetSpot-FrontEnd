@@ -22,9 +22,11 @@ document.addEventListener("DOMContentLoaded", function () {
               <h5 class="card-title">${pet.nome}</h5>
               <p class="card-text">Data de Nascimento: ${formatDate(pet.idade)}</p>
               <p class="card-text">Gênero: ${pet.genero === 1 ? "Macho" : "Fêmea"}</p>
-              <p class="card-text">Comportamento: ${pet.comportamento}</p>
+              <p class="card-text">Especie: ${pet.especie}</p>
               <p class="card-text">Raça: ${pet.raca}</p>
+              <p class="card-text">Peso: ${pet.peso}g</p>
               <p class="card-text">Porte: ${pet.porte}</p>
+              <p class="card-text">Comportamento: ${pet.comportamento}</p>
               <p class="card-text">Castrado: ${pet.castrado ? "Sim" : "Não"}</p>
               <p class="card-text">Tomou principais vacinas: ${pet.vacinado ? "Sim" : "Não"}</p>
             </div>

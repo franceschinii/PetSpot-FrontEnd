@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const dataNascimentoInput = document.getElementById("data-nascimento");
   const generoInput = document.getElementById("genero");
   const comportamentoInput = document.getElementById("comportamento");
+  const especieInput = document.getElementById("especie");
+  const pesoInput = document.getElementById("peso");
   const racaInput = document.getElementById("raca");
   const porteInput = document.getElementById("porte");
   const castradoSimInput = document.getElementById("castrado-sim");
@@ -21,10 +23,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const petData = {
       nome: nomeInput.value,
-      especie: "Cachorro", 
+      especie: especieInput.value, 
       genero: generoInput.value === "macho" ? 1 : 2, 
       raca: racaInput.value,
-      peso: null, // ou outro valor se necessário
+      peso: pesoInput.value, // ou outro valor se necessário
       castrado: castradoSimInput.checked,
       comportamento: comportamentoInput.value,
       porte: porteInput.value,
