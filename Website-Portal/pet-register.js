@@ -1,82 +1,64 @@
-// Definição da classe Pet para representar os dados do pet
-class Pet {
-  constructor(
-    nome,
-    dataDeNascimento,
-    genero,
-    comportamento,
-    especie,
-    raca,
-    peso,
-    porte,
-    castrado,
-    vacinas
-  ) {
-    // Atribuição dos parâmetros recebidos aos membros da classe
-    this.nome = nome;
-    this.dataDeNascimento = dataDeNascimento;
-    this.genero = genero;
-    this.comportamento = comportamento;
-    this.especie = especie;
-    this.raca = raca;
-    this.peso = peso;
-    this.porte = porte;
-    this.castrado = castrado;
-    this.vacinas = vacinas;
-  }
-}
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.querySelector("form");
+  const nomeInput = document.getElementById("nome");
+  const dataNascimentoInput = document.getElementById("data-nascimento");
+  const generoInput = document.getElementById("genero");
+  const comportamentoInput = document.getElementById("comportamento");
+  const racaInput = document.getElementById("raca");
+  const porteInput = document.getElementById("porte");
+  const castradoSimInput = document.getElementById("castrado-sim");
+  const vacinasSimInput = document.getElementById("vacinas-sim");
 
-// Função que irá lidar com o envio do formulário
-function handleFormSubmission(event) {
-  // Impedir o comportamento padrão do formulário(Recarregar página)
-  event.preventDefault();
-  // Criar instância de Pet com os valores no Forms
-  const pet = new Pet(
-    document.getElementById("nome").value,
-    document.getElementById("data-nascimento").value,
-    document.getElementById("genero").value,
-    document.getElementById("comportamento").value,
-    document.getElementById("especie").value,
-    document.getElementById("raca").value,
-    document.getElementById("peso").value,
-    document.getElementById("porte").value,
-    document.querySelector('input[name="castrado"]:checked').value,
-    document.querySelector('input[name="vacinas"]:checked').value
-  );
-  // Enviar dados para o backend
-  enviarDadosParaBackend(pet);
-}
+  form.addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-// Função que lida com o envio dos dados do Pet para o backend
-function enviarDadosParaBackend(pet) {
-  // Fetch API para enviar os dados para a URL
-  fetch(`https://664251513d66a67b3437020e.mockapi.io/pets`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(pet),
-  })
-    // Lidar com a Resposta do Backend
-    .then((response) => {
-      // Resposta bem sucedida, retorna os dados em formato .JSON
+    const ownerId = localStorage.getItem("ownerId");
+    if (!ownerId) {
+      alert("Você não está autenticado. Por favor, faça login.");
+      window.location.href = "user-login.html";
+      return;
+    }
+
+    const petData = {
+      nome: nomeInput.value,
+      especie: "Cachorro", 
+      genero: generoInput.value === "macho" ? 1 : 2, 
+      raca: racaInput.value,
+      peso: null, // ou outro valor se necessário
+      castrado: castradoSimInput.checked,
+      comportamento: comportamentoInput.value,
+      porte: porteInput.value,
+      vacinado: vacinasSimInput.checked,
+      dataDeNascimento: formatDate(dataNascimentoInput.value),
+    };
+
+    try {
+      const response = await fetch(`http://localhost:8080/petspot/pet-register/${ownerId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(petData),
+      });
+
       if (response.ok) {
-        return response.json();
+        const savedPet = await response.json();
+        localStorage.setItem("petID", savedPet.id);
+        alert(`Pet cadastrado com sucesso!`);
+        // Redirecionar para outra página ou limpar o formulário
+        window.location.href = "pet-list.html";
+      } else {
+        const errorMessage = await response.text();
+        alert(`Erro: ${errorMessage}`);
       }
-      // Resposta não foi bem sucedida, lançar um erro
-      throw new Error("Erro ao enviar dados para o backend");
-    })
-    // Lidar com os dados retornados pelo backend
-    .then((data) => {
-      console.log("Dados enviados com sucesso:", data);
-      window.location.href = "pet-list.html";
-      // Faça o que for necessário após o envio bem-sucedido
-    })
-    .catch((error) => {
-      console.error("Erro:", error);
-      // Lidar com o erro, exibir mensagem para o usuário, etc.
-    });
-}
+    } catch (error) {
+      console.error("Erro ao cadastrar o pet:", error);
+      alert("Erro ao cadastrar o pet. Tente novamente mais tarde.");
+    }
+  });
 
-const botaoCadastrar = document.getElementById("botao-cadastrar");
-botaoCadastrar.addEventListener("click", handleFormSubmission);
+  function formatDate(dateString) {
+    const [year, month, day] = dateString.split("-");
+    return `${day}/${month}/${year}`;
+  }
+});
