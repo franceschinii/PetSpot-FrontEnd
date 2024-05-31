@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return;
   }
 
-  fetch(`http://localhost:8080/petspot/meuspets/${ownerId}`)
+  fetch(`https://petspot-api.azurewebsites.net/petspot/meuspets/${ownerId}`)
     .then(response => response.json())
     .then(pets => {
       const petsContainer = document.getElementById("pets-container");
