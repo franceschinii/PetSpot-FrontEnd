@@ -128,13 +128,16 @@
     <main>
       <div class="container">
         <div
-          class="row vh-100 d-flex align-items-center justify-content-center"
+          class="row vh-100 d-flex align-items-md-center align-items-start justify-content-center"
         >
           <div class="col">
-            <h1>Cadastre seu Pet</h1>
-            <br />
-            <form class="row g-3">
-              <div class="col-8">
+            <form
+              class="row justify-content-md-start justify-content-center g-3"
+            >
+              <div class="col-md-12 col-11 py-4 py-md-0">
+                <h1 class="text-md-start text-center">Cadastre seu Pet</h1>
+              </div>
+              <div class="col-md-8 col-11">
                 <label for="nome" class="form-label">Nome do Pet</label>
                 <input
                   type="text"
@@ -144,7 +147,7 @@
                   placeholder="Mica"
                 />
               </div>
-              <div class="col-4">
+              <div class="col-md-4 col-6">
                 <label for="data-nascimento" class="form-label"
                   >Data de Nascimento</label
                 >
@@ -156,14 +159,14 @@
                 />
               </div>
 
-              <div class="col-4">
+              <div class="col-md-4 col-5">
                 <label for="genero" class="form-label">Sexo biológico</label>
                 <select class="form-select" id="genero" name="genero">
                   <option value="Macho">Macho</option>
                   <option value="Fêmea">Fêmea</option>
                 </select>
               </div>
-              <div class="col-4">
+              <div class="col-md-4 col-11">
                 <label for="raca" class="form-label">Espécie</label>
                 <input
                   type="text"
@@ -173,7 +176,7 @@
                   placeholder="Cachorro"
                 />
               </div>
-              <div class="col-4">
+              <div class="col-md-4 col-11">
                 <label for="raca" class="form-label">Raça</label>
                 <input
                   type="text"
@@ -184,7 +187,7 @@
                 />
               </div>
 
-              <div class="col-4">
+              <div class="col-md-4 col-3">
                 <label for="peso" class="form-label"
                   >Peso <small>(g)</small></label
                 >
@@ -196,7 +199,7 @@
                   placeholder="2400"
                 />
               </div>
-              <div class="col-4">
+              <div class="col-md-4 col-4">
                 <label for="genero" class="form-label">Comportamento</label>
                 <select
                   class="form-select"
@@ -209,7 +212,7 @@
                   <option value="Agressivo">Agressivo</option>
                 </select>
               </div>
-              <div class="col-4">
+              <div class="col-md-4 col-4">
                 <label for="porte" class="form-label">Porte</label>
                 <select class="form-select" id="porte" name="porte">
                   <option value="mini">Mini</option>
@@ -218,7 +221,7 @@
                   <option value="grande">Grande</option>
                 </select>
               </div>
-              <div class="col-6">
+              <div class="col-md-6 col-5">
                 <label class="form-check-label">Castrado?</label>
                 <div class="form-check">
                   <input
@@ -246,7 +249,7 @@
                   </label>
                 </div>
               </div>
-              <div class="col-6">
+              <div class="col-md-6 col-6">
                 <label class="form-check-label"
                   >Tomou as principais vacinas?</label
                 >
@@ -276,7 +279,7 @@
                   </label>
                 </div>
               </div>
-              <div class="col-4">
+              <div class="col-md-4 col-12 py-4 d-flex justify-content-md-end justify-content-center align-items-center">
                 <button
                   type="submit"
                   class="btn btn-primary"
@@ -287,7 +290,7 @@
               </div>
             </form>
           </div>
-          <div class="col"></div>
+          <div class="col d-none d-md-block"></div>
         </div>
       </div>
     </main>
