@@ -15,12 +15,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const newsletterCheck = document.getElementById("newsletter-check").checked;
     const termosCheck = document.getElementById("termos-check").checked;
 
+    const responseMessages = document.getElementById("response-messages");
+    responseMessages.innerHTML = ""; // Limpa mensagens anteriores
+
     if (!termosCheck) {
       alert("Você deve concordar com os Termos de Uso.");
       return;
     }
 
-    const [year, month, day] = dataDeNascimento.split('-');
+    if (!nome || !sobrenome || !email || !senha || !repetirSenha || !usuario || !dataDeNascimento || !pais || !telefone) {
+      alert('Preencha todos os campos.');
+      return;
+    }
+
+    const [year, month, day] = dataDeNascimento.split("-");
     const formattedDate = `${day}/${month}/${year}`;
 
     const body = {
@@ -30,14 +38,14 @@ document.addEventListener("DOMContentLoaded", function () {
       senha,
       repetirSenha,
       usuario,
-      dataDeNascimento:formattedDate,
+      dataDeNascimento: formattedDate,
       pais,
       telefone,
       newsletterCheck,
     };
 
-    
-      const response = await fetch("https://664251513d66a67b3437020e.mockapi.io/usuario", {
+    try {
+      const response = await fetch("http://localhost:8080/petspot/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -46,13 +54,26 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       const data = await response.json();
-      if (response.ok) {
-        alert("Cadastro realizado com sucesso!");
-        window.location.href = "user-login.html"; // Redireciona para a página de login
+
+      if (!response.ok) {
+        // Exibe mensagem de erro retornada pela API
+        if (data.hasError) {
+          alert(data.message);
+        } else {
+          alert('Ocorreu um erro desconhecido.');
+        }
       } else {
-     
-        alert(`Erro: ${data.message}`);
+        alert("Cadastro realizado com sucesso!");
+        window.location.href = "user-login.html";
       }
-   
+    } catch (error) {
+      if (error instanceof TypeError) {
+        console.error("Network error or invalid URL:", error);
+        alert("Erro de rede ou URL inválida. Por favor, tente novamente.");
+      } else {
+        console.error("Error:", error);
+        alert(`Ocorreu um erro: ${error.message}`);
+      }
+    }
   });
 });

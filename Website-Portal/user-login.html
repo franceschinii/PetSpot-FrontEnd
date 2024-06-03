@@ -102,57 +102,54 @@
       <!-- Final da seção da navbar -->
     </header>
     <main>
-    <div class="container">
-      <div class="row vh-100 d-flex align-items-center justify-content-center">
-        <div class="col-4 rounded shadow">
-          <form class="row m-4 g-4 justify-content-start" id="login-form">
-            <h1>Conectar-se</h1>
-            <div class="col-sm-12">
-              <label for="email" class="form-label">Email</label>
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                placeholder="anrrypetrin@petspot.com"
-              />
-            </div>
-            <div class="col-sm-12">
-              <label for="senha" class="form-label">Senha</label>
-              <input
-                type="password"
-                class="form-control"
-                id="senha"
-                placeholder="*********"
-              />
-            </div>
-            <div class="col-sm-12">
-              <div class="form-check">
+      <div class="container">
+        <div class="row vh-100 d-flex align-items-center justify-content-center">
+          <div class="col-4 rounded shadow">
+            <form class="row m-4 g-4 justify-content-start" id="login-form">
+              <h1>Conectar-se</h1>
+              <div class="col-sm-12">
+                <label for="email" class="form-label">Email</label>
                 <input
-                  class="form-check-input"
-                  type="checkbox"
-                  id="termos-check"
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  placeholder="anrrypetrin@petspot.com"
+                  required
                 />
-                <label class="form-check-label" for="termos-check">
-                  Mantenha me conectado
-                </label>
               </div>
-            </div>
-            <div class="col-sm-12 d-flex justify-content-between">
-              <a class="py-2" href="forgot-password.html"
-                >Esqueci minha senha</a
-              >
-              <button
-                type="submit"
-                class="btn btn-primary"
-                id="botao-cadastrar"
-              >
-                Entrar
-              </button>
-            </div>
-          </form>
+              <div class="col-sm-12">
+                <label for="senha" class="form-label">Senha</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="senha"
+                  placeholder="*********"
+                  required
+                />
+              </div>
+              <div class="col-sm-12">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="termos-check"
+                  />
+                  <label class="form-check-label" for="termos-check">
+                    Mantenha me conectado
+                  </label>
+                </div>
+              </div>
+              <div class="col-sm-12 d-flex justify-content-between">
+                <a class="py-2" href="forgot-password.html">Esqueci minha senha</a>
+                <button type="submit" class="btn btn-primary" id="botao-cadastrar">
+                  Entrar
+                </button>
+              </div>
+              <div id="response-messages"></div>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
     </main>
     <script
       type="module"
