@@ -1,34 +1,49 @@
-// Função para fazer uma solicitação à API e criar os cards
-function fetchData() {
-  // URL da API
-  const apiUrl = `https://664251513d66a67b3437020e.mockapi.io/pets`;
+async function fetchData() {
+  const ownerId = localStorage.getItem("ownerId");
+  console.log(ownerId); // Verifique se o ownerId está sendo recuperado
 
-  // Fazendo a solicitação GET
-  fetch(apiUrl)
-    .then((response) => response.json()) // Transformando a resposta em JSON
-    .then((data) => {
-      createCards(data); // Chamando a função para criar os cards com os dados recebidos
-    })
-    .catch((error) => console.error("Erro ao buscar dados:", error)); // Lidando com erros
+  if (!ownerId) {
+    displayMessage("Owner ID não encontrado no localStorage.", "danger");
+    return;
+  }
+
+  const apiUrl = `http://localhost:8080/petspot/meuspets/${ownerId}`;
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+    console.log(data); // Verifique os dados retornados pela API
+
+    if (!response.ok) {
+      displayMessage(data.message || "Erro desconhecido", "danger");
+    } else {
+      createCards(data);
+    }
+  } catch (error) {
+    displayMessage(`Erro ao buscar dados: ${error.message}`, "danger");
+  }
 }
 
-// Função para criar os cards com base nos dados recebidos da API
 function createCards(data) {
-  const container = document.querySelector(".container .row");
+  const container = document.getElementById("pet-cards-container");
+  console.log(container); // Verifique se o container está sendo selecionado corretamente
 
-  // Verificando se há dados retornados pela API
-  if (data && data.length > 0) {
-    // Iterando sobre os dados
+  if (Array.isArray(data) && data.length > 0) {
     data.forEach((item, index) => {
-      // Criando elementos HTML para cada card
       const cardColumn = document.createElement("div");
-      cardColumn.classList.add("col-md-3", "position-relative", "card-column");
+      cardColumn.classList.add("col-md-3", "col-sm-6", "mb-4");
 
       const card = document.createElement("div");
-      card.classList.add("card", "fixed-card");
+      card.classList.add("card", "h-100", "position-relative");
 
       const image = document.createElement("img");
-      image.src = "https://www.svgrepo.com/show/452956/dog-head-profile.svg"; // Usando a URL da imagem fornecida pela API
+      image.src = "https://www.svgrepo.com/show/452956/dog-head-profile.svg";
       image.classList.add("card-img-top");
       image.alt = "...";
 
@@ -44,17 +59,16 @@ function createCards(data) {
 
       const itemIdade = document.createElement("li");
       itemIdade.classList.add("list-group-item");
-      itemIdade.textContent = "Data de Nascimento: " + item.dataDeNascimento;
+      itemIdade.textContent = "Data de Nascimento: " + (item.dataDeNascimento ? formatDate(item.dataDeNascimento) : "Não disponível");
 
       const itemGenero = document.createElement("li");
       itemGenero.classList.add("list-group-item");
-      itemGenero.textContent = "Sexo: " + item.genero;
+      itemGenero.textContent = "Sexo: " + (item.genero === 1 ? "Macho" : "Fêmea");
 
       const itemRaca = document.createElement("li");
       itemRaca.classList.add("list-group-item");
       itemRaca.textContent = "Raça: " + item.raca;
 
-      // Adicionando elementos HTML ao DOM
       listGroup.appendChild(itemIdade);
       listGroup.appendChild(itemGenero);
       listGroup.appendChild(itemRaca);
@@ -65,10 +79,9 @@ function createCards(data) {
       card.appendChild(listGroup);
       cardColumn.appendChild(card);
 
-      // Criando e adicionando o botão modal
+      // Adicionando os três pontinhos para exibir detalhes
       const modalButtonDiv = document.createElement("div");
-      modalButtonDiv.classList.add("position-absolute", "modal-icon-div");
-      modalButtonDiv.id = "botao-modal";
+      modalButtonDiv.classList.add("position-absolute", "top-0", "end-0", "p-2");
 
       const modalButton = document.createElement("a");
       modalButton.setAttribute("type", "button");
@@ -81,9 +94,8 @@ function createCards(data) {
 
       modalButton.appendChild(modalIcon);
       modalButtonDiv.appendChild(modalButton);
-      cardColumn.appendChild(modalButtonDiv);
+      card.appendChild(modalButtonDiv);
 
-      // Criando o modal para cada card
       const modal = document.createElement("div");
       modal.classList.add("modal", "fade");
       modal.id = `modal-${index}`;
@@ -120,11 +132,11 @@ function createCards(data) {
       const modalItemIdade = document.createElement("li");
       modalItemIdade.classList.add("list-group-item");
       modalItemIdade.innerHTML =
-        "Data de Nascimento: <b>" + item.dataDeNascimento + "</b>";
+        "Data de Nascimento: <b>" + (item.dataDeNascimento ? formatDate(item.dataDeNascimento) : "Não disponível") + "</b>";
 
       const modalItemGenero = document.createElement("li");
       modalItemGenero.classList.add("list-group-item");
-      modalItemGenero.innerHTML = "Sexo: <b>" + item.genero + "</b>";
+      modalItemGenero.innerHTML = "Sexo: <b>" + (item.genero === 1 ? "Macho" : "Fêmea") + "</b>";
 
       const modalItemComportamento = document.createElement("li");
       modalItemComportamento.classList.add("list-group-item");
@@ -141,7 +153,7 @@ function createCards(data) {
 
       const modalItemPeso = document.createElement("li");
       modalItemPeso.classList.add("list-group-item");
-      modalItemPeso.innerHTML = "Peso: <b>" + item.peso + "kg</b>";
+      modalItemPeso.innerHTML = "Peso: <b>" + (item.peso || "Não disponível") + "kg</b>";
 
       const modalItemPorte = document.createElement("li");
       modalItemPorte.classList.add("list-group-item");
@@ -175,7 +187,6 @@ function createCards(data) {
       modalDialog.appendChild(modalContent);
       modal.appendChild(modalDialog);
 
-      // Criando e adicionando o botão de editar no modal
       const modalFooter = document.createElement("div");
       modalFooter.classList.add("modal-footer");
 
@@ -184,12 +195,10 @@ function createCards(data) {
       modalEditButton.classList.add("btn", "btn-secondary");
       modalEditButton.textContent = "Editar";
       modalEditButton.addEventListener("click", () => {
-        // Fechar o modal atual
         const currentModal = document.getElementById(`modal-${index}`);
         const modal = bootstrap.Modal.getInstance(currentModal);
         modal.hide();
 
-        // Abrir o modal de edição
         const editModal = new bootstrap.Modal(
           document.getElementById("modal2")
         );
@@ -212,12 +221,26 @@ function createCards(data) {
       container.appendChild(cardColumn);
       container.appendChild(modal);
     });
-  } else {
-    // Se não houver dados retornados pela API
-    const errorMessage = document.createElement("p");
-    console.log("Nenhum animal encontrado.");
-    container.appendChild(errorMessage);
-  }
+  } 
+}
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  if (isNaN(date)) return "Data não disponível";
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
+function displayMessage(message, type) {
+  const responseMessages = document.getElementById("response-messages");
+  responseMessages.innerHTML = "";
+  const messageElement = document.createElement("div");
+  messageElement.className = `alert alert-${type}`;
+  messageElement.role = "alert";
+  messageElement.textContent = message;
+  responseMessages.appendChild(messageElement);
 }
 
 window.onload = fetchData;

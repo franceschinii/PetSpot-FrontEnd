@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Chamando a função loginUser e utilizando Try catch para verificar erros.
     try {
       const data = await loginUser(body);
-      displayMessage("Login realizado com sucesso!", "success");
+      localStorage.setItem("ownerId", data.ownerId)
       window.location.href = "pet-list.html";
     } catch (error) {
       displayMessage(error.message, "danger");

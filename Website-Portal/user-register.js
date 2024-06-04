@@ -15,16 +15,18 @@ document.addEventListener("DOMContentLoaded", function () {
     const newsletterCheck = document.getElementById("newsletter-check").checked;
     const termosCheck = document.getElementById("termos-check").checked;
 
-    const responseMessages = document.getElementById("response-messages");
-    responseMessages.innerHTML = ""; // Limpa mensagens anteriores
-
     if (!termosCheck) {
-      alert("Você deve concordar com os Termos de Uso.");
+      displayMessage("Você deve concordar com os Termos de Uso.", "danger");
       return;
     }
 
     if (!nome || !sobrenome || !email || !senha || !repetirSenha || !usuario || !dataDeNascimento || !pais || !telefone) {
-      alert('Preencha todos os campos.');
+      displayMessage("Preencha todos os campos.", "danger");
+      return;
+    }
+
+    if (senha !== repetirSenha) {
+      displayMessage("As senhas não coincidem.", "danger");
       return;
     }
 
@@ -56,24 +58,25 @@ document.addEventListener("DOMContentLoaded", function () {
       const data = await response.json();
 
       if (!response.ok) {
-        // Exibe mensagem de erro retornada pela API
-        if (data.hasError) {
-          alert(data.message);
-        } else {
-          alert('Ocorreu um erro desconhecido.');
-        }
+        //alert(data.hasError ? data.message : 'Ocorreu um erro desconhecido.');
+        displayMessage(data.hasError ? data.message : 'Ocorreu um erro desconhecido.', "danger");
       } else {
-        alert("Cadastro realizado com sucesso!");
         window.location.href = "user-login.html";
       }
     } catch (error) {
-      if (error instanceof TypeError) {
-        console.error("Network error or invalid URL:", error);
-        alert("Erro de rede ou URL inválida. Por favor, tente novamente.");
-      } else {
-        console.error("Error:", error);
-        alert(`Ocorreu um erro: ${error.message}`);
-      }
+      console.error("Error:", error);
+      alert(`Ocorreu um erro: ${error.message}`);
     }
   });
+
+  const responseMessages = document.getElementById("response-messages");
+
+  function displayMessage(message, type) {
+    responseMessages.innerHTML = "";
+    const messageElement = document.createElement("div");
+    messageElement.className = `alert alert-${type}`;
+    messageElement.role = "alert";
+    messageElement.textContent = message;
+    responseMessages.appendChild(messageElement);
+  }
 });
